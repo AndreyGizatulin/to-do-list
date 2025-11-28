@@ -1,34 +1,37 @@
 <script>
-  let tasks = [];
+  import { tasks, addTask, removeTask } from './tasks.js';
+
   let text = '';
-
-  function addTask() {
-    if (text === '') return;
-    tasks = [...tasks, text];
-    text = '';
-  }
-
-  function removeTask(index) {
-    tasks = tasks.filter((_, i) => i !== index);
-  }
 </script>
 
 <div class="center">
   <h1>To‑Do</h1>
 
   <input
-          placeholder="Новая задача"
-          bind:value={text}
-          on:keydown={(e) => e.key === 'Enter' && addTask()}
+    placeholder="Новая задача"
+    bind:value={text}
+    on:keydown={function(event) {
+      if (event.key === 'Enter') {
+        addTask(text);
+        text = '';
+      }
+    }}
   />
 
-  <button on:click={addTask}>Добавить</button>
+  <button on:click={function(){
+    addTask(text);
+    text = '';
+  }}>
+    Добавить
+  </button>
 
   <ul>
-    {#each tasks as t, i}
+    {#each $tasks as t (t.id)}
       <li>
-        {t}
-        <button on:click={() => removeTask(i)}>Удалить</button>
+        {t.title}
+        <button on:click={function () {removeTask(t.id);}}>
+        Удалить
+        </button>
       </li>
     {/each}
   </ul>
