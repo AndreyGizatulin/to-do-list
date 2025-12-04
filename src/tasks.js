@@ -6,34 +6,29 @@ export const statusFilter = writable('all');
 
 export const filteredTasks = derived(
     [tasks, searchText, statusFilter],
-    function ([$tasks, $searchText, $statusFilter]) {
+        ([$tasks, $searchText, $statusFilter]) => {
 
         let result = $tasks;
 
         if ($searchText !== '') {
-            result = result.filter(function(task){
-                return task.title.includes($searchText);
-            });
+            result = result.filter((task) => task.title.includes($searchText));
         }
 
         if ($statusFilter === 'active') {
-            result = result.filter(function(task){
-                return task.status === false;
-            });
+            result = result.filter((task) => task.status === false);
+
         } else if ($statusFilter === 'completed') {
-            result = result.filter(function (task) {
-                return task.status === true;
-            });
+            result = result.filter((task) => task.status === true);
         }
 
         return result;
     }
-)
+);
 
 let nextId = 0;
 
 
-export function addTask(text) {
+export const addTask = (text) => {
     if (text === '') return;
     const task = {
         id: nextId,
@@ -43,23 +38,23 @@ export function addTask(text) {
 
     nextId = nextId + 1;
 
-    tasks.update(function(list){
+    tasks.update((list) =>{
         list.push(task);
         return list;
     });
 }
 
-export function removeTask(id) {
-    tasks.update(function(list){
-        return list.filter(function(task){
+export const removeTask = (id) => {
+    tasks.update((list) => {
+        return list.filter((task) =>{
             return task.id !== id;
         });
     });
 }
 
-export function toggleTask(id) {
-    tasks.update(function(list){
-        return list.map(function(task){
+export const toggleTask = (id) => {
+    tasks.update((list) => {
+        return list.map((task) => {
             if (task.id === id) {
                 task.status = !task.status;
             }
